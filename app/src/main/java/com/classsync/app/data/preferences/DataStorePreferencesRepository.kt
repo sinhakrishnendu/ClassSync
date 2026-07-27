@@ -65,7 +65,7 @@ class DataStorePreferencesRepository @Inject constructor(
     }
 
     private fun toPreferences(values: Preferences): UserPreferences = UserPreferences(
-        selectedMode = enumValueOrDefault(values[Keys.SelectedMode], UserMode.TEACHER),
+        selectedMode = userModeOrTeacher(values[Keys.SelectedMode]),
         onboardingComplete = values[Keys.OnboardingComplete] ?: false,
         defaultReminderMinutes = (values[Keys.DefaultReminderMinutes] ?: 30).coerceAtLeast(1),
         remindersEnabled = values[Keys.RemindersEnabled] ?: true,
@@ -76,6 +76,11 @@ class DataStorePreferencesRepository @Inject constructor(
 
     private inline fun <reified T : Enum<T>> enumValueOrDefault(value: String?, default: T): T =
         value?.let { runCatching { enumValueOf<T>(it) }.getOrNull() } ?: default
+
+    private fun userModeOrTeacher(value: String?): UserMode = when (value) {
+        UserMode.ADMINISTRATION.name -> UserMode.ADMINISTRATION
+        else -> UserMode.TEACHER
+    }
 
     private object Keys {
         val SelectedMode = stringPreferencesKey("selected_mode")

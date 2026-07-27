@@ -2,18 +2,18 @@
 
 ## Requirement Summary
 
-ClassSync is a free, ad-free Android timetable app for teachers and students. It must work fully offline, preserve data across restarts, and require no account. In the MVP, "digital roster" means a digital routine or timetable. Attendance and roll-list management are deferred.
+ClassSync is a free, ad-free Android timetable app for teachers and academic administration. It must work fully offline, preserve data across restarts, and require no account. In the MVP, "digital roster" means a digital routine or timetable. Attendance is deferred.
 
 The app has two local modes:
 
 - Teacher Mode: create and manage class schedules, academic groups, weekly routines, reminders, and class exceptions.
-- Student Mode: manually maintain a personal weekly class routine, reminders, and basic profile selections.
+- Administration Mode: build department-wide routines from syllabus requirements and exact faculty class loads.
 
 The selected mode is stored locally and can be changed later from Settings without deleting existing data.
 
 ## MVP Feature List
 
-- First-launch onboarding with Teacher Mode and Student Mode.
+- First-launch onboarding with Teacher and Administration workspaces.
 - Mode-aware dashboard showing date, next class, countdown, and today's classes.
 - Add/edit/delete/duplicate timetable entries.
 - Weekly recurring class support and one-time class support.
@@ -34,14 +34,14 @@ The selected mode is stored locally and can be changed later from Settings witho
 ## Explicit Non-MVP Items
 
 - Cloud synchronization.
-- Teacher-to-student timetable publishing.
+- Public timetable publishing.
 - Attendance register.
-- Student roll list.
+- Learner or roll-list management.
 - Assignment tracking.
 - Exam timetable.
 - Home-screen widgets.
 - Calendar integration.
-- Institutional administration.
+- Public or cloud-based institutional publishing.
 - Login, registration, subscription, ads, analytics, or tracking.
 
 ## Screen Map
@@ -77,7 +77,7 @@ Labels remain simple and mode-neutral where possible. Mode-specific copy is load
 1. App opens.
 2. Preferences are read from DataStore.
 3. If onboarding is incomplete, show mode selection.
-4. User selects Teacher or Student.
+4. User selects Teacher or Administration.
 5. Store selected mode and onboarding completion locally.
 6. Navigate to the mode-aware Today dashboard.
 
@@ -252,9 +252,9 @@ Implementation will pin versions in `gradle/libs.versions.toml`. If the user's A
 
 - Implement teacher dashboard, course/group management, schedule CRUD, day-wise timetable, grouped timetable, details, duplicate, delete confirmation, search, and filters.
 
-### Phase 6: Student Mode
+### Phase 6: Administration Mode
 
-- Implement student setup, manual timetable entry, dashboard, weekly/day-wise views, edit/delete, and reminders.
+- Implement Master Routine setup, syllabus/faculty load allocation, class-wise and faculty-wise views, generation, validation, and export.
 
 ### Phase 7: Notifications
 

@@ -10,7 +10,7 @@
 - Reschedule after class edits.
 - Cancel after class deletion.
 - Respect disabled per-class and global reminders.
-- Schedule reminders only for the currently selected Teacher or Student mode.
+- Schedule reminders only for the currently selected Teacher or Administration workspace.
 - Handle weekly recurring classes.
 - Avoid duplicate notifications.
 - Avoid unnecessary exact alarm permissions.

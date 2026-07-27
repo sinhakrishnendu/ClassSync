@@ -2,9 +2,9 @@
 
 Room database name: `classsync.db`
 
-Initial schema version: `1`
+Current schema version: `2`
 
-Production builds must not use destructive migration. Version 1 starts without migrations. Future schema versions add explicit migrations and exported schema files.
+Production builds do not use destructive migration. Version 2 adds Master Routine tables through the declared Room `1 -> 2` auto-migration and preserves every version-1 personal timetable table. Full Master Routine details are in [Master Routine Database Schema](master-routine-database-schema.md).
 
 ## Entity: AcademicGroup
 
@@ -30,7 +30,7 @@ Indexes:
 Notes:
 
 - The app suggests examples like PG 1st Semester and UG 6th Semester but does not hard-code only those values.
-- Teachers and students can create custom entries.
+- Teachers and administrators can create custom entries.
 
 ## Entity: Subject
 

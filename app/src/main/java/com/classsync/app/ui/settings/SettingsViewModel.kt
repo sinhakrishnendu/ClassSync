@@ -9,6 +9,7 @@ import com.classsync.app.domain.model.UserMode
 import com.classsync.app.domain.model.UserPreferences
 import com.classsync.app.domain.repository.PreferencesRepository
 import com.classsync.app.domain.repository.ScheduleRepository
+import com.classsync.app.domain.repository.MasterRoutineRepository
 import com.classsync.app.notification.ReminderScheduler
 import dagger.hilt.android.lifecycle.HiltViewModel
 import java.time.DayOfWeek
@@ -31,6 +32,7 @@ sealed interface SettingsEvent {
 class SettingsViewModel @Inject constructor(
     private val preferencesRepository: PreferencesRepository,
     private val scheduleRepository: ScheduleRepository,
+    private val masterRoutineRepository: MasterRoutineRepository,
     private val reminderScheduler: ReminderScheduler,
     private val backupManager: BackupManager,
 ) : ViewModel() {
@@ -71,6 +73,7 @@ class SettingsViewModel @Inject constructor(
     fun deleteAllData() = viewModelScope.launch {
         runCatching {
             scheduleRepository.deleteAll()
+            masterRoutineRepository.deleteAll()
             reminderScheduler.cancelAll()
         }.onSuccess { eventChannel.send(SettingsEvent.DataDeleted) }
             .onFailure { eventChannel.send(SettingsEvent.OperationFailed) }

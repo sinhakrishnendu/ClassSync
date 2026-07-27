@@ -96,7 +96,11 @@ class ReminderWorker @AssistedInject constructor(
                     .setCategory(NotificationCompat.CATEGORY_REMINDER)
                     .setPriority(NotificationCompat.PRIORITY_HIGH)
                     .build()
-                NotificationManagerCompat.from(context).notify(scheduleId.notificationId(), notification)
+                try {
+                    NotificationManagerCompat.from(context).notify(scheduleId.notificationId(), notification)
+                } catch (error: SecurityException) {
+                    Log.w(LogTag, "Notification permission was revoked before the reminder could be shown", error)
+                }
             }
             runCatching { reminderScheduler.scheduleNext(scheduleId) }
                 .onFailure { Log.e(LogTag, "Unable to schedule the next class reminder", it) }

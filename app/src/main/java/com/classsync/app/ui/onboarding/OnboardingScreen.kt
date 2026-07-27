@@ -3,14 +3,12 @@ package com.classsync.app.ui.onboarding
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.weight
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
@@ -22,7 +20,6 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -33,7 +30,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.classsync.app.R
 import com.classsync.app.domain.model.UserMode
@@ -79,57 +76,14 @@ fun OnboardingScreen(
             onClick = { viewModel.selectMode(UserMode.TEACHER) },
         )
         ModeCard(
-            selected = state.selectedMode == UserMode.STUDENT,
-            title = stringResource(R.string.student_mode),
-            description = stringResource(R.string.student_mode_description),
+            selected = state.selectedMode == UserMode.ADMINISTRATION,
+            title = stringResource(R.string.administration_mode),
+            description = stringResource(R.string.administration_mode_description),
             icon = { Icon(Icons.Outlined.Today, contentDescription = null) },
-            onClick = { viewModel.selectMode(UserMode.STUDENT) },
+            onClick = { viewModel.selectMode(UserMode.ADMINISTRATION) },
         )
-
-        if (state.selectedMode == UserMode.STUDENT) {
-            Spacer(Modifier.height(4.dp))
-            Text(stringResource(R.string.student_setup_title), style = MaterialTheme.typography.titleLarge)
-            Text(
-                stringResource(R.string.student_setup_description),
-                style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
-            )
-            OutlinedTextField(
-                value = state.institution,
-                onValueChange = viewModel::setInstitution,
-                modifier = Modifier.fillMaxWidth(),
-                label = { Text(stringResource(R.string.institution)) },
-                singleLine = true,
-            )
-            OutlinedTextField(
-                value = state.programme,
-                onValueChange = viewModel::setProgramme,
-                modifier = Modifier.fillMaxWidth(),
-                label = { Text(stringResource(R.string.programme)) },
-                supportingText = if (state.showValidation && state.programme.isBlank()) {
-                    { Text(stringResource(R.string.required_field)) }
-                } else null,
-                isError = state.showValidation && state.programme.isBlank(),
-                singleLine = true,
-            )
-            OutlinedTextField(
-                value = state.semester,
-                onValueChange = viewModel::setSemester,
-                modifier = Modifier.fillMaxWidth(),
-                label = { Text(stringResource(R.string.semester)) },
-                supportingText = if (state.showValidation && state.semester.isBlank()) {
-                    { Text(stringResource(R.string.required_field)) }
-                } else null,
-                isError = state.showValidation && state.semester.isBlank(),
-                singleLine = true,
-            )
-            OutlinedTextField(
-                value = state.batchSection,
-                onValueChange = viewModel::setBatchSection,
-                modifier = Modifier.fillMaxWidth(),
-                label = { Text(stringResource(R.string.batch_section)) },
-                singleLine = true,
-            )
+        if (state.showValidation && state.selectedMode == null) {
+            Text(stringResource(R.string.choose_workspace), color = MaterialTheme.colorScheme.error)
         }
 
         Button(

@@ -6,7 +6,7 @@ import java.time.LocalDate
 import java.time.LocalTime
 import java.time.ZonedDateTime
 
-enum class UserMode { TEACHER, STUDENT }
+enum class UserMode { TEACHER, ADMINISTRATION }
 
 enum class ThemePreference { SYSTEM, LIGHT, DARK }
 
@@ -121,4 +121,3 @@ data class ScheduleOccurrence(
     val isActive: Boolean
         get() = status == null || status == ExceptionStatus.RESCHEDULED
 }
-

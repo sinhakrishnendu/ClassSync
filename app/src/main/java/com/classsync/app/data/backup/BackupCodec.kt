@@ -71,7 +71,7 @@ object BackupCodec {
             requireBackup(subjectGroups[schedule.subjectId] == schedule.academicGroupId) {
                 "Schedule ${schedule.id} links a subject to the wrong group."
             }
-            parseEnum<UserMode>(schedule.mode, "mode")
+            parseUserMode(schedule.mode)
             val recurrence = parseEnum<RecurrenceType>(schedule.recurrenceType, "recurrence")
             runCatching { DayOfWeek.of(schedule.dayOfWeek) }
                 .getOrElse { throw BackupValidationException("Schedule ${schedule.id} has an invalid day.") }
@@ -106,7 +106,7 @@ object BackupCodec {
             parseInstant(exception.createdAt)
             parseInstant(exception.updatedAt)
         }
-        parseEnum<UserMode>(document.preferences.selectedMode, "selected mode")
+        parseUserMode(document.preferences.selectedMode)
         parseEnum<ThemePreference>(document.preferences.themePreference, "theme")
         parseEnum<TimeFormat>(document.preferences.timeFormat, "time format")
         requireBackup(document.preferences.defaultReminderMinutes > 0) { "The default reminder interval is invalid." }
@@ -140,7 +140,7 @@ object BackupCodec {
     fun BackupDocument.toSchedules(): List<ClassScheduleEntity> = schedules.map {
         ClassScheduleEntity(
             id = it.id,
-            mode = enumValueOf(it.mode),
+            mode = parseUserMode(it.mode),
             academicGroupId = it.academicGroupId,
             subjectId = it.subjectId,
             dayOfWeek = DayOfWeek.of(it.dayOfWeek),
@@ -174,7 +174,7 @@ object BackupCodec {
     }
 
     fun BackupDocument.toPreferences(): UserPreferences = UserPreferences(
-        selectedMode = enumValueOf(preferences.selectedMode),
+        selectedMode = parseUserMode(preferences.selectedMode),
         onboardingComplete = true,
         defaultReminderMinutes = preferences.defaultReminderMinutes,
         remindersEnabled = preferences.remindersEnabled,
@@ -201,6 +201,12 @@ object BackupCodec {
     private inline fun <reified T : Enum<T>> parseEnum(value: String, label: String): T =
         runCatching { enumValueOf<T>(value) }
             .getOrElse { throw BackupValidationException("Invalid $label in backup.") }
+
+    private fun parseUserMode(value: String): UserMode = when (value) {
+        UserMode.TEACHER.name, "STUDENT" -> UserMode.TEACHER
+        UserMode.ADMINISTRATION.name -> UserMode.ADMINISTRATION
+        else -> throw BackupValidationException("Invalid mode in backup.")
+    }
 
     private fun requireBackup(condition: Boolean, message: () -> String) {
         if (!condition) throw BackupValidationException(message())

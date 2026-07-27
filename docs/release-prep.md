@@ -39,20 +39,20 @@ Expected paths:
 Short description:
 
 ```text
-Offline class timetable and reminder app for teachers and students.
+Offline timetable, reminder and routine generator for teachers and administration.
 ```
 
 Full description:
 
 ```text
-ClassSync helps teachers and students manage weekly academic class routines completely offline. Create one-time or weekly classes, organise courses and semesters, see today's schedule and next class, and receive local reminders before class. ClassSync requires no account and includes no advertisements, analytics, subscriptions, or internet access.
+ClassSync helps teachers and academic administration manage weekly routines completely offline. Create personal classes and reminders, or generate a department timetable from syllabus periods and exact faculty class loads. ClassSync requires no account and includes no advertisements, analytics, subscriptions, or internet access.
 ```
 
 ## Screenshot Checklist
 
 - Onboarding mode selection
 - Teacher Today dashboard
-- Student Today dashboard
+- Administration Today dashboard and Master Routine entry
 - Add/edit class form
 - Day timetable and course-group timetable
 - Class details and occurrence actions
@@ -72,4 +72,3 @@ ClassSync helps teachers and students manage weekly academic class routines comp
 - TalkBack, large font, light/dark, and tablet layouts reviewed.
 - Signed App Bundle installed and smoke-tested on a physical device.
 - Privacy policy URL and support contact added to the store listing before publication.
-

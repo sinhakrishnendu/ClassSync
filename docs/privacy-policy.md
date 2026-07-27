@@ -10,7 +10,7 @@ ClassSync is designed to work offline. Timetable data is stored locally on the u
 
 The app stores:
 
-- selected Teacher or Student mode.
+- selected Teacher or Administration workspace.
 - courses, programmes, semesters, batches, and sections entered by the user.
 - subject names and optional subject codes.
 - class schedule entries.

@@ -55,7 +55,11 @@ interface SubjectDao {
 @Dao
 interface ClassScheduleDao {
     @Transaction
-    @Query("SELECT * FROM class_schedules WHERE mode = :mode ORDER BY dayOfWeek, startTime")
+    @Query(
+        """SELECT * FROM class_schedules
+           WHERE CASE WHEN mode = 'STUDENT' THEN 'TEACHER' ELSE mode END = :mode
+           ORDER BY dayOfWeek, startTime""",
+    )
     fun observeByMode(mode: UserMode): Flow<List<ClassEntryRecord>>
 
     @Transaction
@@ -95,4 +99,3 @@ interface ScheduleExceptionDao {
     @Insert suspend fun insertAll(entities: List<ScheduleExceptionEntity>)
     @Query("DELETE FROM schedule_exceptions") suspend fun deleteAll()
 }
-

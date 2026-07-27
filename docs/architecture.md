@@ -49,6 +49,7 @@ Responsibilities:
 - Reminder-time calculation.
 - Overlap detection.
 - Import validation contracts.
+- Master Routine feasibility validation, hard-constraint checking, deterministic generation, quality scoring, and PDF document preparation.
 
 Domain logic should be testable with plain JVM unit tests.
 
@@ -60,6 +61,7 @@ Responsibilities:
 - DataStore preference implementation.
 - Repository implementations.
 - Import/export serialization and mapping.
+- Transactional Master Routine aggregate persistence.
 - Transaction boundaries.
 
 Data entities are not exposed directly to UI screens.
@@ -107,6 +109,8 @@ Route groups:
 - `about`
 - `privacy`
 - `importExport`
+- `master-routines`
+- `master-routine/edit?routineId={routineId}`
 
 Navigation actions should avoid duplicate top-level destinations by using `launchSingleTop` and `restoreState`.
 

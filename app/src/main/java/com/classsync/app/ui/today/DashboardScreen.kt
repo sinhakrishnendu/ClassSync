@@ -9,6 +9,8 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Schedule
+import androidx.compose.material.icons.outlined.AutoAwesome
+import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -20,7 +22,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.classsync.app.R
 import com.classsync.app.domain.model.UserMode
@@ -34,6 +36,7 @@ import com.classsync.app.ui.components.rememberTimeFormatter
 @Composable
 fun DashboardScreen(
     onOpenSchedule: (Long) -> Unit,
+    onOpenMasterRoutine: (() -> Unit)? = null,
     contentPadding: androidx.compose.foundation.layout.PaddingValues,
     viewModel: DashboardViewModel = hiltViewModel(),
 ) {
@@ -54,13 +57,34 @@ fun DashboardScreen(
                 )
                 Text(
                     stringResource(
-                        if (state.mode == UserMode.TEACHER) R.string.teacher_mode else R.string.student_mode,
+                        if (state.mode == UserMode.TEACHER) R.string.teacher_mode else R.string.administration_mode,
                     ),
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
             }
         }
         item { NotificationPermissionCard() }
+        if (onOpenMasterRoutine != null) {
+            item {
+                ElevatedCard(onClick = onOpenMasterRoutine, modifier = Modifier.fillMaxWidth()) {
+                    Row(
+                        Modifier.padding(16.dp),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(12.dp),
+                    ) {
+                        Icon(Icons.Outlined.AutoAwesome, contentDescription = null, tint = MaterialTheme.colorScheme.primary)
+                        Column {
+                            Text(stringResource(R.string.master_routine), fontWeight = FontWeight.SemiBold)
+                            Text(
+                                stringResource(R.string.master_routine_home_description),
+                                style = MaterialTheme.typography.bodySmall,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                            )
+                        }
+                    }
+                }
+            }
+        }
         item {
             Text(stringResource(R.string.next_class), style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.SemiBold)
         }

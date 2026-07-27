@@ -16,12 +16,14 @@ import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.ExposedDropdownMenuDefaults
+import androidx.compose.material3.ExposedDropdownMenuAnchorType
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -31,7 +33,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.classsync.app.R
 import com.classsync.app.ui.components.ClassEntryCard
@@ -43,6 +45,7 @@ import java.time.DayOfWeek
 @Composable
 fun TimetableScreen(
     onOpenSchedule: (Long) -> Unit,
+    onManageCourses: () -> Unit,
     contentPadding: PaddingValues,
     viewModel: TimetableViewModel = hiltViewModel(),
 ) {
@@ -73,17 +76,20 @@ fun TimetableScreen(
             )
         }
         item {
-            Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                FilterChip(
-                    selected = state.filters.viewMode == TimetableViewMode.DAY,
-                    onClick = { viewModel.setViewMode(TimetableViewMode.DAY) },
-                    label = { Text(stringResource(R.string.day_view)) },
-                )
-                FilterChip(
-                    selected = state.filters.viewMode == TimetableViewMode.COURSE,
-                    onClick = { viewModel.setViewMode(TimetableViewMode.COURSE) },
-                    label = { Text(stringResource(R.string.course_view)) },
-                )
+            Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
+                Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                    FilterChip(
+                        selected = state.filters.viewMode == TimetableViewMode.DAY,
+                        onClick = { viewModel.setViewMode(TimetableViewMode.DAY) },
+                        label = { Text(stringResource(R.string.day_view)) },
+                    )
+                    FilterChip(
+                        selected = state.filters.viewMode == TimetableViewMode.COURSE,
+                        onClick = { viewModel.setViewMode(TimetableViewMode.COURSE) },
+                        label = { Text(stringResource(R.string.course_view)) },
+                    )
+                }
+                TextButton(onClick = onManageCourses) { Text(stringResource(R.string.manage_courses)) }
             }
         }
         if (state.filters.viewMode == TimetableViewMode.DAY) {
@@ -109,7 +115,7 @@ fun TimetableScreen(
                     value = selectedGroup?.displayName ?: stringResource(R.string.all_courses),
                     onValueChange = {},
                     readOnly = true,
-                    modifier = Modifier.menuAnchor().fillMaxWidth(),
+                    modifier = Modifier.menuAnchor(ExposedDropdownMenuAnchorType.PrimaryNotEditable).fillMaxWidth(),
                     label = { Text(stringResource(R.string.courses)) },
                     trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(groupsExpanded) },
                 )
@@ -160,4 +166,3 @@ fun TimetableScreen(
 
 private fun orderedDays(start: DayOfWeek): List<DayOfWeek> =
     (0..6).map { DayOfWeek.of(((start.value - 1 + it) % 7) + 1) }
-

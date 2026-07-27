@@ -7,6 +7,7 @@ import com.classsync.app.data.backup.GroupBackup
 import com.classsync.app.data.backup.PreferencesBackup
 import com.classsync.app.data.backup.ScheduleBackup
 import com.classsync.app.data.backup.SubjectBackup
+import com.classsync.app.domain.model.UserMode
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertThrows
 import org.junit.Test
@@ -36,6 +37,21 @@ class BackupCodecTest {
         assertThrows(BackupValidationException::class.java) {
             BackupCodec.decodeAndValidate("{not-json}")
         }
+    }
+
+    @Test
+    fun legacyStudentWorkspaceImportsAsTeacherWithoutLosingSchedules() {
+        val legacy = validDocument().copy(
+            schedules = validDocument().schedules.map { it.copy(mode = "STUDENT") },
+            preferences = validDocument().preferences.copy(selectedMode = "STUDENT"),
+        )
+
+        BackupCodec.validate(legacy)
+        val schedules = with(BackupCodec) { legacy.toSchedules() }
+        val preferences = with(BackupCodec) { legacy.toPreferences() }
+
+        assertEquals(UserMode.TEACHER, schedules.single().mode)
+        assertEquals(UserMode.TEACHER, preferences.selectedMode)
     }
 
     private fun validDocument(): BackupDocument {

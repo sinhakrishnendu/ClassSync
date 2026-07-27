@@ -1,13 +1,13 @@
 # ClassSync
 
-ClassSync is a free, open-source Android timetable and class-reminder app for teachers and students. It works offline, requires no account, and contains no ads, subscriptions, analytics, tracking SDKs, or internet permission.
+ClassSync is a free, open-source Android timetable and class-reminder app for teachers and academic administration. It works offline, requires no account, and contains no ads, subscriptions, analytics, tracking SDKs, or internet permission.
 
 The project name is temporary and is isolated in `app_name` so it can be changed without restructuring the codebase.
 
 ## Features
 
-- Teacher and Student modes with non-destructive switching.
-- First-run mode selection and student class setup.
+- Teacher and Administration workspaces with non-destructive switching.
+- First-run workspace selection with no account or profile setup.
 - Weekly and one-time classes with validated start/end times.
 - Today dashboard, next-class countdown, day view, and course/group view.
 - Add, edit, delete, duplicate, search, and filter timetable entries.
@@ -18,6 +18,8 @@ The project name is temporary and is isolated in `app_name` so it can be changed
 - System, light, and dark themes; 12/24-hour display; configurable week start.
 - Versioned, human-readable JSON export/import with full validation and transactional Room import.
 - Confirmed delete-all flow, About page, and in-app privacy statement.
+- Offline Master Routine workspace with saved drafts, working days/periods, classes, faculty, syllabus loads, exact faculty allocations, and availability constraints.
+- Deterministic clash-free routine generation, validation, class/teacher views, locked entries, validated manual moves, and offline PDF export.
 
 ## Architecture
 
@@ -26,6 +28,8 @@ ClassSync is a single-activity Compose application using MVVM and practical Clea
 - `domain`: models, repository contracts, validation, recurrence, next-class, and reminder calculations.
 - `data`: Room, DataStore, repository implementations, and versioned JSON backup handling.
 - `notification`: notification channels, Hilt workers, unique WorkManager reminders, and system-change restoration.
+- `domain/master`: Android-independent Master Routine validation, constraint search, quality scoring, and PDF data preparation.
+- `ui/master`: minimal five-stage Master Routine setup, generation review, editing, and export.
 - `ui`: Compose screens, immutable screen state, StateFlow ViewModels, and Navigation Compose.
 
 Room is the timetable source of truth. DataStore stores preferences only. WorkManager is intentionally used instead of exact alarms, so reminders may be delayed by Android battery optimisation.
@@ -35,10 +39,10 @@ See [Architecture](docs/architecture.md), [Database Schema](docs/database-schema
 ## Requirements
 
 - Android Studio with Android SDK 36 installed.
-- JDK 17.
+- Android Studio's bundled JDK 21.
 - No external service credentials.
 
-The pinned toolchain is AGP 8.13.2, Gradle 8.13, Kotlin 2.3.10, and Java 17. The minimum supported Android version is Android 8.0 (API 26).
+The pinned toolchain is AGP 9.3.1, Gradle 9.5, Kotlin 2.3.10, and Java 21 through Android Studio's bundled runtime. The minimum supported Android version is Android 8.0 (API 26).
 
 ## Build
 
@@ -85,10 +89,11 @@ Timetable data stays in the local Room database. Android cloud backup is disable
 
 ## Known Limitations
 
-- No teacher-to-student sync, accounts, cloud backup, attendance, assignments, exams, or widgets.
+- No learner-facing workspace, accounts, cloud backup, attendance, assignments, exams, or widgets.
 - JSON import replaces the current timetable after an explicit confirmation.
 - WorkManager reminders are persistent but not guaranteed to fire at the exact minute on heavily optimised devices.
 - Reminder and reboot behavior still requires final manual verification on physical Android devices before a public release.
+- Master Routine PDF rendering and the five-stage flow require final visual verification in Android Studio/on a device.
 
 ## Documentation
 
@@ -100,4 +105,3 @@ Timetable data stays in the local Room database. Android cloud backup is disable
 ## License
 
 MIT License. See [LICENSE](LICENSE).
-

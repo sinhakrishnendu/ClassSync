@@ -9,19 +9,21 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.weight
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.CalendarMonth
 import androidx.compose.material.icons.outlined.Schedule
+import androidx.compose.material.icons.outlined.ExpandLess
+import androidx.compose.material.icons.outlined.ExpandMore
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.ExposedDropdownMenuDefaults
+import androidx.compose.material3.ExposedDropdownMenuAnchorType
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -44,7 +46,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.classsync.app.R
 import com.classsync.app.domain.model.RecurrenceType
@@ -74,6 +76,7 @@ fun ScheduleFormScreen(
     var selectingStart by remember { mutableStateOf(false) }
     var selectingEnd by remember { mutableStateOf(false) }
     var selectingDate by remember { mutableStateOf(false) }
+    var showMore by remember(state.id, state.isLoading) { mutableStateOf(state.id > 0) }
 
     LaunchedEffect(Unit) {
         viewModel.events.collect { event ->
@@ -114,22 +117,6 @@ fun ScheduleFormScreen(
                 error = state.errors.contains(ScheduleField.SEMESTER),
             )
         }
-        item {
-            Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
-                FormTextField(
-                    value = state.batchSection,
-                    onValueChange = viewModel::setBatchSection,
-                    label = stringResource(R.string.batch_section),
-                    modifier = Modifier.weight(1f),
-                )
-                FormTextField(
-                    value = state.institution,
-                    onValueChange = viewModel::setInstitution,
-                    label = stringResource(R.string.institution),
-                    modifier = Modifier.weight(1f),
-                )
-            }
-        }
         item { SectionTitle(stringResource(R.string.class_details)) }
         item {
             FormTextField(
@@ -140,50 +127,74 @@ fun ScheduleFormScreen(
             )
         }
         item {
-            FormTextField(
-                value = state.subjectCode,
-                onValueChange = viewModel::setSubjectCode,
-                label = stringResource(R.string.subject_code),
-            )
-        }
-        item {
-            Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
-                FormTextField(
-                    value = state.classroom,
-                    onValueChange = viewModel::setClassroom,
-                    label = stringResource(R.string.classroom),
-                    modifier = Modifier.weight(1f),
-                )
-                FormTextField(
-                    value = if (state.mode == UserMode.STUDENT) state.teacherName else state.topic,
-                    onValueChange = if (state.mode == UserMode.STUDENT) viewModel::setTeacherName else viewModel::setTopic,
-                    label = stringResource(if (state.mode == UserMode.STUDENT) R.string.teacher_name else R.string.class_topic),
-                    modifier = Modifier.weight(1f),
-                )
+            OutlinedButton(onClick = { showMore = !showMore }, modifier = Modifier.fillMaxWidth()) {
+                Icon(if (showMore) Icons.Outlined.ExpandLess else Icons.Outlined.ExpandMore, contentDescription = null)
+                Text(stringResource(if (showMore) R.string.fewer_options else R.string.more_options), Modifier.padding(start = 8.dp))
             }
         }
-        item {
-            FormTextField(
-                value = state.notes,
-                onValueChange = viewModel::setNotes,
-                label = stringResource(R.string.notes),
-                singleLine = false,
-                minLines = 3,
-            )
-        }
-        item { SectionTitle(stringResource(R.string.recurrence)) }
-        item {
-            Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                FilterChip(
-                    selected = state.recurrenceType == RecurrenceType.WEEKLY,
-                    onClick = { viewModel.setRecurrence(RecurrenceType.WEEKLY) },
-                    label = { Text(stringResource(R.string.weekly)) },
+        if (showMore) {
+            item {
+                Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+                    FormTextField(
+                        value = state.batchSection,
+                        onValueChange = viewModel::setBatchSection,
+                        label = stringResource(R.string.batch_section),
+                        modifier = Modifier.weight(1f),
+                    )
+                    FormTextField(
+                        value = state.institution,
+                        onValueChange = viewModel::setInstitution,
+                        label = stringResource(R.string.institution),
+                        modifier = Modifier.weight(1f),
+                    )
+                }
+            }
+            item {
+                FormTextField(
+                    value = state.subjectCode,
+                    onValueChange = viewModel::setSubjectCode,
+                    label = stringResource(R.string.subject_code),
                 )
-                FilterChip(
-                    selected = state.recurrenceType == RecurrenceType.ONE_TIME,
-                    onClick = { viewModel.setRecurrence(RecurrenceType.ONE_TIME) },
-                    label = { Text(stringResource(R.string.one_time)) },
+            }
+            item {
+                Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+                    FormTextField(
+                        value = state.classroom,
+                        onValueChange = viewModel::setClassroom,
+                        label = stringResource(R.string.classroom),
+                        modifier = Modifier.weight(1f),
+                    )
+                    FormTextField(
+                        value = if (state.mode == UserMode.ADMINISTRATION) state.teacherName else state.topic,
+                        onValueChange = if (state.mode == UserMode.ADMINISTRATION) viewModel::setTeacherName else viewModel::setTopic,
+                        label = stringResource(if (state.mode == UserMode.ADMINISTRATION) R.string.teacher_name else R.string.class_topic),
+                        modifier = Modifier.weight(1f),
+                    )
+                }
+            }
+            item {
+                FormTextField(
+                    value = state.notes,
+                    onValueChange = viewModel::setNotes,
+                    label = stringResource(R.string.notes),
+                    singleLine = false,
+                    minLines = 3,
                 )
+            }
+            item { SectionTitle(stringResource(R.string.recurrence)) }
+            item {
+                Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                    FilterChip(
+                        selected = state.recurrenceType == RecurrenceType.WEEKLY,
+                        onClick = { viewModel.setRecurrence(RecurrenceType.WEEKLY) },
+                        label = { Text(stringResource(R.string.weekly)) },
+                    )
+                    FilterChip(
+                        selected = state.recurrenceType == RecurrenceType.ONE_TIME,
+                        onClick = { viewModel.setRecurrence(RecurrenceType.ONE_TIME) },
+                        label = { Text(stringResource(R.string.one_time)) },
+                    )
+                }
             }
         }
         if (state.recurrenceType == RecurrenceType.WEEKLY) {
@@ -193,7 +204,7 @@ fun ScheduleFormScreen(
                         value = dayLabel(state.dayOfWeek),
                         onValueChange = {},
                         readOnly = true,
-                        modifier = Modifier.menuAnchor().fillMaxWidth(),
+                        modifier = Modifier.menuAnchor(ExposedDropdownMenuAnchorType.PrimaryNotEditable).fillMaxWidth(),
                         label = { Text(stringResource(R.string.day)) },
                         trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(dayExpanded) },
                     )
@@ -246,42 +257,44 @@ fun ScheduleFormScreen(
                 Text(stringResource(R.string.invalid_time), color = MaterialTheme.colorScheme.error)
             }
         }
-        item { SectionTitle(stringResource(R.string.reminder)) }
-        item {
-            Row(
-                Modifier.fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceBetween,
-            ) {
-                Text(stringResource(R.string.reminder_before))
-                Switch(checked = state.reminderEnabled, onCheckedChange = viewModel::setReminderEnabled)
-            }
-        }
-        if (state.reminderEnabled) {
+        if (showMore) {
+            item { SectionTitle(stringResource(R.string.reminder)) }
             item {
-                LazyRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                    items(listOf(5, 10, 15, 30, 45, 60)) { minutes ->
-                        FilterChip(
-                            selected = state.reminderMinutes == minutes.toString(),
-                            onClick = { viewModel.setReminderMinutes(minutes.toString()) },
-                            label = { Text(stringResource(R.string.minutes_value, minutes)) },
-                        )
-                    }
+                Row(
+                    Modifier.fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                ) {
+                    Text(stringResource(R.string.reminder_before))
+                    Switch(checked = state.reminderEnabled, onCheckedChange = viewModel::setReminderEnabled)
                 }
             }
-            item {
-                OutlinedTextField(
-                    value = state.reminderMinutes,
-                    onValueChange = viewModel::setReminderMinutes,
-                    modifier = Modifier.fillMaxWidth(),
-                    label = { Text(stringResource(R.string.custom_minutes)) },
-                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-                    isError = state.errors.contains(ScheduleField.REMINDER_MINUTES),
-                    supportingText = if (state.errors.contains(ScheduleField.REMINDER_MINUTES)) {
-                        { Text(stringResource(R.string.invalid_reminder)) }
-                    } else null,
-                    singleLine = true,
-                )
+            if (state.reminderEnabled) {
+                item {
+                    LazyRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                        items(listOf(5, 10, 15, 30, 45, 60)) { minutes ->
+                            FilterChip(
+                                selected = state.reminderMinutes == minutes.toString(),
+                                onClick = { viewModel.setReminderMinutes(minutes.toString()) },
+                                label = { Text(stringResource(R.string.minutes_value, minutes)) },
+                            )
+                        }
+                    }
+                }
+                item {
+                    OutlinedTextField(
+                        value = state.reminderMinutes,
+                        onValueChange = viewModel::setReminderMinutes,
+                        modifier = Modifier.fillMaxWidth(),
+                        label = { Text(stringResource(R.string.custom_minutes)) },
+                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                        isError = state.errors.contains(ScheduleField.REMINDER_MINUTES),
+                        supportingText = if (state.errors.contains(ScheduleField.REMINDER_MINUTES)) {
+                            { Text(stringResource(R.string.invalid_reminder)) }
+                        } else null,
+                        singleLine = true,
+                    )
+                }
             }
         }
         if (state.duplicate) {

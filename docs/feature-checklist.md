@@ -15,10 +15,10 @@
 - [x] Versioned JSON codec with relationship and malformed-input validation
 - [x] Explicit migration policy without destructive fallback
 
-## Phases 4-6: Onboarding, Teacher And Student Modes
+## Phases 4-6: Onboarding, Teacher And Administration Workspaces
 
-- [x] First-launch Teacher/Student selection stored in DataStore
-- [x] Student course/semester setup and later course-group editing
+- [x] First-launch Teacher/Administration selection stored in DataStore
+- [x] Administration Master Routine entry from Home
 - [x] Non-destructive mode switching
 - [x] Mode-aware Today dashboard with date, next class, countdown, and today's entries
 - [x] Custom course, semester, batch/section, institution, and subject handling
@@ -29,7 +29,7 @@
 - [x] Course/group timetable across the week
 - [x] Search across subject, course, semester, batch, day, room, teacher, topic, and notes
 - [x] Course/group filter
-- [x] Shared teacher/student timetable workflows with mode-separated schedules
+- [x] Teacher and administration timetable workflows with workspace-separated schedules
 
 ## Phases 7-8: Notifications, Settings And Data
 
@@ -72,21 +72,36 @@
 - [x] Dependabot Gradle and Actions updates
 - [x] Play Store listing draft and screenshot checklist
 - [x] Final README, privacy policy, and MIT license
-- [ ] Successful JDK 17/Android SDK 36 build in Android Studio or CI
+- [x] Successful JDK 21/Android SDK 36 debug compilation and JVM tests
 - [ ] Signed release artifact and physical-device release acceptance test
+
+## Master Routine MVP
+
+- [x] Seven required planning documents
+- [x] Isolated Room v2 tables and non-destructive `1 -> 2` migration
+- [x] Multiple saved drafts with resumable setup stage
+- [x] Working days, custom periods, breaks, classes, teachers, subjects, assignments, and teacher availability
+- [x] Exact syllabus-to-faculty load splitting for shared papers
+- [x] Hard clash, capacity, workload, consecutive-period, availability, break, and locked-entry validation
+- [x] Deterministic offline constraint-based generation with progress and cancellation
+- [x] Class-wise and teacher-wise review plus workload report
+- [x] Locked entries and conflict-checked manual moves
+- [x] Draft/ready/finalized status
+- [x] Android-independent PDF preparation and offline Android PDF writer
+- [x] Focused generator, conflict, workload, practical-block, manual-move, scoring, and PDF preparation tests
+- [ ] Android Studio visual walkthrough, on-device PDF inspection, and accessibility review
 
 ## Known Limitations
 
-- No teacher-to-student sync, accounts, cloud backup, attendance, roll lists, assignments, exams, widgets, PDF, or CSV export.
+- No learner-facing workspace, accounts, cloud backup, attendance, roll lists, assignments, exams, widgets, or CSV export.
 - JSON import intentionally replaces local timetable records after confirmation.
 - WorkManager is persistent but Android may delay reminders under battery optimisation.
 - No exact-alarm permission is requested.
 
 ## Future Roadmap
 
-- Attendance and student roll lists.
+- Attendance and roll-list management.
 - Assignments, exams, holidays, and academic calendars.
 - Timetable file/QR sharing and optional teacher publishing.
 - Optional cross-device sync and calendar integration.
 - Widgets, PDF/CSV export, substitutions, and syllabus progress.
-

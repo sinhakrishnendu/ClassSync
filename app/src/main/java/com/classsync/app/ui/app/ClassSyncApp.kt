@@ -3,11 +3,10 @@ package com.classsync.app.ui.app
 import android.content.Intent
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.outlined.ArrowBack
 import androidx.compose.material.icons.outlined.Add
-import androidx.compose.material.icons.outlined.ArrowBack
 import androidx.compose.material.icons.outlined.DateRange
 import androidx.compose.material.icons.outlined.Home
-import androidx.compose.material.icons.outlined.School
 import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -36,6 +35,8 @@ import androidx.navigation.navArgument
 import androidx.navigation.navDeepLink
 import com.classsync.app.R
 import com.classsync.app.ui.courses.CoursesScreen
+import com.classsync.app.ui.master.MasterRoutineDashboardScreen
+import com.classsync.app.ui.master.MasterRoutineWizardScreen
 import com.classsync.app.ui.onboarding.OnboardingScreen
 import com.classsync.app.ui.schedule.ScheduleDetailsScreen
 import com.classsync.app.ui.schedule.ScheduleFormScreen
@@ -56,9 +57,12 @@ private object Routes {
     const val EditSchedule = "schedule/{scheduleId}/edit"
     const val About = "about"
     const val Privacy = "privacy"
+    const val MasterRoutines = "master-routines"
+    const val MasterRoutineEdit = "master-routine/edit?routineId={routineId}"
 
     fun details(id: Long) = "schedule/$id"
     fun edit(id: Long) = "schedule/$id/edit"
+    fun masterRoutine(id: String) = "master-routine/edit?routineId=$id"
 }
 
 private data class TopLevelDestination(
@@ -68,9 +72,8 @@ private data class TopLevelDestination(
 )
 
 private val topLevelDestinations = listOf(
-    TopLevelDestination(Routes.Today, R.string.today, Icons.Outlined.Home),
+    TopLevelDestination(Routes.Today, R.string.home, Icons.Outlined.Home),
     TopLevelDestination(Routes.Timetable, R.string.timetable, Icons.Outlined.DateRange),
-    TopLevelDestination(Routes.Courses, R.string.courses, Icons.Outlined.School),
     TopLevelDestination(Routes.Settings, R.string.settings, Icons.Outlined.Settings),
 )
 
@@ -101,7 +104,7 @@ fun ClassSyncApp(
                     navigationIcon = if (!isTopLevel) {
                         {
                             IconButton(onClick = { navController.popBackStack() }) {
-                                Icon(Icons.Outlined.ArrowBack, contentDescription = stringResource(R.string.navigate_back))
+                                Icon(Icons.AutoMirrored.Outlined.ArrowBack, contentDescription = stringResource(R.string.navigate_back))
                             }
                         }
                     } else {
@@ -156,12 +159,14 @@ fun ClassSyncApp(
             composable(Routes.Today) {
                 DashboardScreen(
                     onOpenSchedule = { navController.navigate(Routes.details(it)) },
+                    onOpenMasterRoutine = { navController.navigate(Routes.MasterRoutines) },
                     contentPadding = contentPadding,
                 )
             }
             composable(Routes.Timetable) {
                 TimetableScreen(
                     onOpenSchedule = { navController.navigate(Routes.details(it)) },
+                    onManageCourses = { navController.navigate(Routes.Courses) },
                     contentPadding = contentPadding,
                 )
             }
@@ -214,6 +219,19 @@ fun ClassSyncApp(
             composable(Routes.Privacy) {
                 InfoScreen(R.string.privacy_title, R.string.privacy_body, contentPadding)
             }
+            composable(Routes.MasterRoutines) {
+                MasterRoutineDashboardScreen(
+                    contentPadding = contentPadding,
+                    onCreate = { navController.navigate(Routes.masterRoutine("new")) },
+                    onOpen = { navController.navigate(Routes.masterRoutine(it)) },
+                )
+            }
+            composable(
+                route = Routes.MasterRoutineEdit,
+                arguments = listOf(navArgument("routineId") { type = NavType.StringType; defaultValue = "new" }),
+            ) {
+                MasterRoutineWizardScreen(contentPadding = contentPadding, showMessage = showMessage)
+            }
         }
     }
 }
@@ -230,6 +248,8 @@ private fun screenTitle(route: String): String = stringResource(
         Routes.EditSchedule -> R.string.edit_class
         Routes.About -> R.string.about_title
         Routes.Privacy -> R.string.privacy_title
+        Routes.MasterRoutines -> R.string.master_routines
+        Routes.MasterRoutineEdit -> R.string.master_routine
         else -> R.string.app_name
     },
 )

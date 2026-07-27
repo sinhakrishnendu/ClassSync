@@ -11,9 +11,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
 
 private val LightColors = lightColorScheme(
-    primary = Forest,
+    primary = MorphoBlue,
     onPrimary = Paper,
-    secondary = Plum,
+    secondary = MorphoCyan,
     tertiary = Warning,
     background = Paper,
     surface = Paper,
@@ -22,8 +22,8 @@ private val LightColors = lightColorScheme(
 )
 
 private val DarkColors = darkColorScheme(
-    primary = ForestLight,
-    secondary = PlumLight,
+    primary = MorphoBlueLight,
+    secondary = MorphoCyanLight,
     tertiary = androidx.compose.ui.graphics.Color(0xFFFFB77A),
     background = DarkPaper,
     surface = DarkPaper,

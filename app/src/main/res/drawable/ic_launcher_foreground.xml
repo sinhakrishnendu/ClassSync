@@ -4,14 +4,61 @@
     android:height="108dp"
     android:viewportWidth="108"
     android:viewportHeight="108">
+    <!-- Keep the full butterfly inside Android's adaptive-icon safe zone. -->
+    <group
+        android:pivotX="54"
+        android:pivotY="54"
+        android:scaleX="0.68"
+        android:scaleY="0.68">
+    <!-- Dark outer wings keep the morpho silhouette readable at small launcher sizes. -->
     <path
-        android:fillColor="#006C4C"
-        android:pathData="M30,25h48a8,8 0,0 1,8 8v47a4,4 0,0 1,-4 4H26a4,4 0,0 1,-4 -4V33a8,8 0,0 1,8 -8z" />
+        android:fillColor="#071E3D"
+        android:pathData="M52,53 C48,37 39,25 27,23 C17,21 13,31 18,41 C23,51 34,57 48,59 Z" />
     <path
-        android:fillColor="#FFFFFF"
-        android:pathData="M33,20h6v15h-6zM69,20h6v15h-6zM29,41h50v6H29zM33,54h12v10H33zM49,54h12v10H49zM65,54h12v10H65zM33,68h12v9H33zM49,68h12v9H49z" />
+        android:fillColor="#071E3D"
+        android:pathData="M56,53 C60,37 69,25 81,23 C91,21 95,31 90,41 C85,51 74,57 60,59 Z" />
     <path
-        android:fillColor="#E7B9DD"
-        android:pathData="M65,68h12v9H65z" />
-</vector>
+        android:fillColor="#071E3D"
+        android:pathData="M49,57 C36,57 25,64 24,74 C23,82 32,87 41,82 C47,78 50,70 52,61 Z" />
+    <path
+        android:fillColor="#071E3D"
+        android:pathData="M59,57 C72,57 83,64 84,74 C85,82 76,87 67,82 C61,78 58,70 56,61 Z" />
 
+    <!-- Iridescent blue inner wings. -->
+    <path
+        android:fillColor="#087BEA"
+        android:pathData="M49,52 C45,39 38,29 29,27 C22,25 19,32 22,39 C26,48 36,53 48,56 Z" />
+    <path
+        android:fillColor="#087BEA"
+        android:pathData="M59,52 C63,39 70,29 79,27 C86,25 89,32 86,39 C82,48 72,53 60,56 Z" />
+    <path
+        android:fillColor="#00A6FF"
+        android:pathData="M48,61 C38,61 30,66 29,73 C29,78 35,81 41,78 C45,75 47,69 48,61 Z" />
+    <path
+        android:fillColor="#00A6FF"
+        android:pathData="M60,61 C70,61 78,66 79,73 C79,78 73,81 67,78 C63,75 61,69 60,61 Z" />
+    <path
+        android:fillColor="#76D6FF"
+        android:pathData="M32,31 C38,33 43,40 46,49 C39,46 34,41 32,35 Z" />
+    <path
+        android:fillColor="#76D6FF"
+        android:pathData="M76,31 C70,33 65,40 62,49 C69,46 74,41 76,35 Z" />
+
+    <!-- Body and antennae. -->
+    <path
+        android:fillColor="#06152B"
+        android:pathData="M51,47 C51,43 53,41 54,41 C56,41 57,43 57,47 L58,70 C58,76 55,82 54,84 C53,82 50,76 50,70 Z" />
+    <path
+        android:fillColor="@android:color/transparent"
+        android:strokeColor="#06152B"
+        android:strokeWidth="2"
+        android:strokeLineCap="round"
+        android:pathData="M53,43 C50,37 46,34 42,32 M55,43 C58,37 62,34 66,32" />
+
+    <!-- Pale edge spots are characteristic of a blue morpho. -->
+    <path android:fillColor="#DDF5FF" android:pathData="M23,35a2,2 0,1 0,4 0a2,2 0,1 0,-4 0" />
+    <path android:fillColor="#DDF5FF" android:pathData="M81,35a2,2 0,1 0,4 0a2,2 0,1 0,-4 0" />
+    <path android:fillColor="#DDF5FF" android:pathData="M28,72a1.8,1.8 0,1 0,3.6 0a1.8,1.8 0,1 0,-3.6 0" />
+    <path android:fillColor="#DDF5FF" android:pathData="M76.4,72a1.8,1.8 0,1 0,3.6 0a1.8,1.8 0,1 0,-3.6 0" />
+    </group>
+</vector>
